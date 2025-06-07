@@ -42,10 +42,30 @@ const mdComponents = {
       {children}
     </p>
   ),
-  a: ({ className, children, href, ...props }: MdComponentProps) => (
-    <Badge className="text-xs mx-0.5">
+  a: ({ className, children, href, ...props }: MdComponentProps) => {
+    // Check if the link is a citation
+    if (href && href.startsWith("short_url:")) {
+      const shortUrl = href.replace("short_url:", "");
+      return (
+        <Badge className="text-xs mx-0.5">
+          <a
+            className={cn(
+              "text-blue-400 hover:text-blue-300 text-xs",
+              className
+            )}
+            href={shortUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            {...props}
+          >
+            {children}
+          </a>
+        </Badge>
+      );
+    }
+    return (
       <a
-        className={cn("text-blue-400 hover:text-blue-300 text-xs", className)}
+        className={cn("text-blue-400 hover:text-blue-300", className)}
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -53,8 +73,8 @@ const mdComponents = {
       >
         {children}
       </a>
-    </Badge>
-  ),
+    );
+  },
   ul: ({ className, children, ...props }: MdComponentProps) => (
     <ul className={cn("list-disc pl-6 mb-3", className)} {...props}>
       {children}
@@ -228,6 +248,10 @@ interface ChatMessagesViewProps {
   onCancel: () => void;
   liveActivityEvents: ProcessedEvent[];
   historicalActivities: Record<string, ProcessedEvent[]>;
+  effort: string;
+  setEffort: (effort: string) => void;
+  model: string;
+  setModel: (model: string) => void;
 }
 
 export function ChatMessagesView({
@@ -238,6 +262,10 @@ export function ChatMessagesView({
   onCancel,
   liveActivityEvents,
   historicalActivities,
+  effort,
+  setEffort,
+  model,
+  setModel,
 }: ChatMessagesViewProps) {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
@@ -315,6 +343,10 @@ export function ChatMessagesView({
         isLoading={isLoading}
         onCancel={onCancel}
         hasHistory={messages.length > 0}
+        effort={effort}
+        setEffort={setEffort}
+        model={model}
+        setModel={setModel}
       />
     </div>
   );

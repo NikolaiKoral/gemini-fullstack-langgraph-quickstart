@@ -16,6 +16,10 @@ interface InputFormProps {
   onCancel: () => void;
   isLoading: boolean;
   hasHistory: boolean;
+  effort: string;
+  setEffort: (effort: string) => void;
+  model: string;
+  setModel: (model: string) => void;
 }
 
 export const InputForm: React.FC<InputFormProps> = ({
@@ -23,10 +27,12 @@ export const InputForm: React.FC<InputFormProps> = ({
   onCancel,
   isLoading,
   hasHistory,
+  effort,
+  setEffort,
+  model,
+  setModel,
 }) => {
   const [internalInputValue, setInternalInputValue] = useState("");
-  const [effort, setEffort] = useState("medium");
-  const [model, setModel] = useState("gemini-2.5-flash-preview-04-17");
 
   const handleInternalSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -158,6 +164,14 @@ export const InputForm: React.FC<InputFormProps> = ({
                 >
                   <div className="flex items-center">
                     <Cpu className="h-4 w-4 mr-2 text-purple-400" /> 2.5 Pro
+                  </div>
+                </SelectItem>
+                <SelectItem
+                  value="gemini-2.5-pro-preview-06-05"
+                  className="hover:bg-neutral-600 focus:bg-neutral-600 cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <Cpu className="h-4 w-4 mr-2 text-purple-400" /> 2.5 Pro (New)
                   </div>
                 </SelectItem>
               </SelectContent>

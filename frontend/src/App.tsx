@@ -6,6 +6,8 @@ import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { ChatMessagesView } from "@/components/ChatMessagesView";
 
 export default function App() {
+  const [effort, setEffort] = useState("medium");
+  const [model, setModel] = useState("gemini-2.5-flash-preview-04-17");
   const [processedEventsTimeline, setProcessedEventsTimeline] = useState<
     ProcessedEvent[]
   >([]);
@@ -21,9 +23,7 @@ export default function App() {
     max_research_loops: number;
     reasoning_model: string;
   }>({
-    apiUrl: import.meta.env.DEV
-      ? "http://localhost:2024"
-      : "http://localhost:8123",
+    apiUrl: "http://localhost:2024",
     assistantId: "agent",
     messagesKey: "messages",
     onFinish: (event: any) => {
@@ -54,9 +54,7 @@ export default function App() {
           title: "Reflection",
           data: event.reflection.is_sufficient
             ? "Search successful, generating final answer."
-            : `Need more information, searching for ${event.reflection.follow_up_queries.join(
-                ", "
-              )}`,
+            : `Need more information: ${event.reflection.knowledge_gap}`,
         };
       } else if (event.finalize_answer) {
         processedEvent = {
@@ -165,6 +163,10 @@ export default function App() {
               handleSubmit={handleSubmit}
               isLoading={thread.isLoading}
               onCancel={handleCancel}
+              effort={effort}
+              setEffort={setEffort}
+              model={model}
+              setModel={setModel}
             />
           ) : (
             <ChatMessagesView
@@ -175,6 +177,10 @@ export default function App() {
               onCancel={handleCancel}
               liveActivityEvents={processedEventsTimeline}
               historicalActivities={historicalActivities}
+              effort={effort}
+              setEffort={setEffort}
+              model={model}
+              setModel={setModel}
             />
           )}
         </div>
